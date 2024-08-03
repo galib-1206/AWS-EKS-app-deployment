@@ -1,6 +1,7 @@
 # AWS-EKS-app-deployment
 
-### Architecture : 
+### Architecture :
+
 ![eks1!](eks pics/eks1.png)
 
 ### Create a vpc : (_eks-vpc_)
@@ -11,6 +12,7 @@
   
   **Network Connection** : 
 - 1 NAT gateway
+  
 ![eks2!](eks pics/eks2.png)
 
 After creating VPC , set up iam role.
@@ -41,7 +43,9 @@ After creating VPC , set up iam role.
 - Network : only private subnets 
 
 Then check pods ( cluster -> resources -> pods)
+
 ![eks3!](eks pics/eks3.png)
+
 EKS cluster configured.
 
 ### Deploying Application : 
@@ -49,6 +53,7 @@ EKS cluster configured.
 - Update local kube config file 
 - Create deployment.yaml (includes all yaml :  namespace, deployment, service) 
 - Check pods , service .
+  
   ![eks4!](eks pics/eks4.png)
 
 This is deployed in private subnet . for accessing it , we need to create a load balancer through ingress.
@@ -56,14 +61,18 @@ This is deployed in private subnet . for accessing it , we need to create a load
 
 ### Load Balancing : 
 1. Tagging elb role with public subnets
+   
    ![eks5!](eks pics/eks5.png) 
 
 
-2. Configure  Identity Provider for Configure load balancer controller and access cluster
+3. Configure  Identity Provider for Configure load balancer controller and access cluster
+   
    ![eks6!](eks pics/eks6.png)
+   
 Copy connect provider url and paste it to (iam -> identity provider )
 
 ![eks7!](eks pics/eks7.png)
+
 **Identity provider** : this allows us to create iam role for service-account .yaml and accessing from k8s cluster.
 
 3. Create iam role policy for load balancer. 
@@ -71,12 +80,15 @@ Copy connect provider url and paste it to (iam -> identity provider )
 - loadbalancer-trust-policy.json 
 
 ![eks8!](eks pics/eks8.png)
+
 **Controller policy**
 
 ![eks9!](eks pics/eks9.png)
+
 **Trust policy**. Replace oidc provider id here.
 
 ![eks10!](eks pics/eks10.png)
+
 Copy oidc provider id from here to trust policy. 
 
       
@@ -120,9 +132,11 @@ metadata:
 ![eks12!](eks pics/eks12.png)
 
 **AWS loadbalancer  console :** 
+
 ![eks13!](eks pics/eks13.png)
 
 ![eks14!](eks pics/eks14.png)
 
 ![eks15!](eks pics/eks15.png)
+
 **Hit the load balancer DNS Url and Tada!!!**
