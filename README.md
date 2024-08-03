@@ -4,25 +4,33 @@
 
 ![eks1!](eks/eks1.png)
 
+
+
 ### Create a vpc : (_eks-vpc_)
 - 2 public subnet , 2 private subnet , 1 NAT gateway , Np endpoint
-  
+
+ 
   **Route table** : 
 - 1 public rtb, and 2 private rtb
+
   
   **Network Connection** : 
 - 1 NAT gateway
   
-![eks2!](eks pics/eks2.png)
+![eks2!](eks/eks2.png)
 
 After creating VPC , set up iam role.
+
+
 
 ### IAM Role : 
 - Role name : EKS cluster policy
  _EKS Cluster (AWS Service) -> AmazonEKSVPCResourceController (permission)_
 
+
 - Role name : EKS node role
  _EC2 (AWS service)  -> AmazonEKSWorkernodePolicy , EKS_CNI_Policy , EC2ContainerRegistryReadOnly (permission)_
+
 
 
 ### EKS Cluster Configuration :
@@ -44,9 +52,11 @@ After creating VPC , set up iam role.
 
 Then check pods ( cluster -> resources -> pods)
 
-![eks3!](eks pics/eks3.png)
+![eks3!](eks/eks3.png)
 
 EKS cluster configured.
+
+
 
 ### Deploying Application : 
 - Aws configure with access , secret key.
@@ -54,24 +64,28 @@ EKS cluster configured.
 - Create deployment.yaml (includes all yaml :  namespace, deployment, service) 
 - Check pods , service .
   
-  ![eks4!](eks pics/eks4.png)
+  ![eks4!](eks/eks4.png)
 
 This is deployed in private subnet . for accessing it , we need to create a load balancer through ingress.
+
+
 
 
 ### Load Balancing : 
 1. Tagging elb role with public subnets
    
-   ![eks5!](eks pics/eks5.png) 
+   ![eks5!](eks/eks5.png) 
 
 
 3. Configure  Identity Provider for Configure load balancer controller and access cluster
    
-   ![eks6!](eks pics/eks6.png)
+   ![eks6!](eks/eks6.png)
    
 Copy connect provider url and paste it to (iam -> identity provider )
 
-![eks7!](eks pics/eks7.png)
+![eks7!](eks/eks7.png)
+
+
 
 **Identity provider** : this allows us to create iam role for service-account .yaml and accessing from k8s cluster.
 
@@ -79,20 +93,27 @@ Copy connect provider url and paste it to (iam -> identity provider )
 - loadbalancer-controller policy.json
 - loadbalancer-trust-policy.json 
 
-![eks8!](eks pics/eks8.png)
+
+![eks8!](eks/eks8.png)
 
 **Controller policy**
 
-![eks9!](eks pics/eks9.png)
+
+
+![eks9!](eks/eks9.png)
 
 **Trust policy**. Replace oidc provider id here.
 
-![eks10!](eks pics/eks10.png)
+
+
+![eks10!](eks/eks10.png)
 
 Copy oidc provider id from here to trust policy. 
 
       
 4. After creating loadbalancer controller iam role, now service.account.yaml & ingress.yaml can be deployed. 
+
+
  
 **Service.account.yaml** : Configuration for setting up the AWS Load Balancer Controller in an Amazon EKS (Elastic Kubernetes Service) cluster. 
 ```sh
@@ -108,6 +129,8 @@ metadata:
     eks.amazonaws.com/role-arn:
  arn:aws:iam::<accountId>:role/<loadbalancerControllerRoleName>
 ```
+
+
 
 5. Install Load Balancer Controller with helm 
 
@@ -127,16 +150,19 @@ metadata:
           --set serviceAccount.name=aws-load-balancer-controller
 ```
 
-![eks11!](eks pics/eks11.png)
+![eks11!](eks/eks11.png)
 
-![eks12!](eks pics/eks12.png)
+![eks12!](eks/eks12.png)
+
+
+
 
 **AWS loadbalancer  console :** 
 
-![eks13!](eks pics/eks13.png)
+![eks13!](eks/eks13.png)
 
-![eks14!](eks pics/eks14.png)
+![eks14!](eks/eks14.png)
 
-![eks15!](eks pics/eks15.png)
+![eks15!](eks/eks15.png)
 
 **Hit the load balancer DNS Url and Tada!!!**
