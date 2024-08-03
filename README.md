@@ -2,7 +2,7 @@
 
 ### Architecture :
 
-![eks1!](eks_pics/eks1.png)
+![eks1!](eks/eks1.png)
 
 ### Create a vpc : (_eks-vpc_)
 - 2 public subnet , 2 private subnet , 1 NAT gateway , Np endpoint
