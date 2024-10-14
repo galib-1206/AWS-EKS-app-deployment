@@ -1,4 +1,5 @@
 # AWS-EKS-app-deployment
+This project automates the deployment of applications on AWS EKS (Elastic Kubernetes Service) using Kubernetes manifests.
 
 ### Architecture :
 
